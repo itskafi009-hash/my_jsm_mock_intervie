@@ -116,12 +116,12 @@ const AuthForm = ({type}:{type:FormType}) => {
 
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input type="email" placeholder="Your email" {...field} />
+                                    <Input placeholder="Your Name" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
