@@ -10,8 +10,10 @@ enum CallStatus {
     FINISHED = 'FINISHED',
 }
 
-type AgentProps = {
-    userName: string
+interface AgentProps{
+    userName: string;
+    userId: string;
+    type: string;
 }
 
 const Agent = ({ userName }: AgentProps) => {
