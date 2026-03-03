@@ -1,0 +1,27 @@
+type User @table {
+  uid: String! @primaryKey
+  username: String! @unique
+  email: String! @unique
+  bio: String
+  createdAt: Timestamp!
+  followers: [Follow!]! @hasMany(references: "followedUid")
+  following: [Follow!]! @hasMany(references: "followerUid")
+  posts: [Post!]! @hasMany(references: "authorUid")
+}
+
+type Post @table {
+  id: String! @primaryKey @default(expr: "uuid()")
+  authorUid: String!
+  author: User! @belongsTo(references: "authorUid")
+  content: String!
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type Follow @table {
+  id: String! @primaryKey @default(expr: "uuid()")
+  followerUid: String!
+  followedUid: String!
+  follower: User! @belongsTo(references: "followerUid")
+  followed: User! @belongsTo(references: "followedUid")
+  createdAt: Timestamp! @default(expr: "request.time")
+}

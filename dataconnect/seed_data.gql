@@ -1,0 +1,72 @@
+mutation CreateDemoData @auth(level: USER, insecureReason: "This operation is for seeding data during development and testing.") @transaction {
+  user1: user_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    displayName: "Alice User",
+    email: "alice@example.com",
+    createdAt: "2023-01-01T10:00:00Z"
+  })
+  user2: user_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440001",
+    displayName: "Bob User",
+    email: "bob@example.com",
+    createdAt: "2023-01-02T11:00:00Z"
+  })
+  movie1: movie_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440002",
+    title: "Inception",
+    year: 2010,
+    genres: ["Sci-Fi", "Action"],
+    runtimeMinutes: 148,
+    summary: "A thief who steals corporate secrets through use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    createdAt: "2023-01-03T12:00:00Z"
+  })
+  movie2: movie_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440003",
+    title: "The Matrix",
+    year: 1999,
+    genres: ["Sci-Fi", "Action"],
+    runtimeMinutes: 136,
+    summary: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+    createdAt: "2023-01-04T13:00:00Z"
+  })
+  movieList1: movieList_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440004",
+    userId: "550e8400-e29b-41d4-a716-446655440000",
+    name: "Alice's Favorites",
+    isPublic: true,
+    description: "My top sci-fi action movies.",
+    createdAt: "2023-01-05T14:00:00Z",
+    updatedAt: "2023-01-05T14:00:00Z"
+  })
+  movieListEntry1: movieListEntry_insert(data: {
+    movieListId: "550e8400-e29b-41d4-a716-446655440004",
+    movieId: "550e8400-e29b-41d4-a716-446655440002",
+    position: 1,
+    note: "Mind-bending!"
+  })
+  movieListEntry2: movieListEntry_insert(data: {
+    movieListId: "550e8400-e29b-41d4-a716-446655440004",
+    movieId: "550e8400-e29b-41d4-a716-446655440003",
+    position: 2,
+    note: "Classic!"
+  })
+  watch1: watch_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440005",
+    userId: "550e8400-e29b-41d4-a716-446655440000",
+    movieId: "550e8400-e29b-41d4-a716-446655440002",
+    createdAt: "2023-01-06T15:00:00Z",
+    watchDate: "2023-01-06",
+    location: "Home"
+  })
+  review1: review_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440006",
+    userId: "550e8400-e29b-41d4-a716-446655440000",
+    movieId: "550e8400-e29b-41d4-a716-446655440002",
+    watchId: "550e8400-e29b-41d4-a716-446655440005",
+    rating: 5,
+    isPublic: true,
+    reviewText: "Absolutely brilliant, a masterpiece of modern cinema!",
+    createdAt: "2023-01-07T16:00:00Z",
+    updatedAt: "2023-01-07T16:00:00Z"
+  })
+}
