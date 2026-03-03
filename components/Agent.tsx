@@ -16,7 +16,7 @@ interface AgentProps{
     type: string;
 }
 
-const Agent = ({ userName, userId, type }: any) => {
+const Agent = ({ userName, userId, type }: AgentProps) => {
 
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const isSpeaking = true;
