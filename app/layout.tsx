@@ -6,6 +6,7 @@ import {Toaster} from "@/components/ui/sonner";
 const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
   subsets: ["latin"],
+  weight: ['200','400','700']
 });
 
 export const metadata: Metadata = {
