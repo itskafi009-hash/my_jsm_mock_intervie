@@ -1,22 +1,48 @@
-import React from "react";
-import { Controller, FieldValues, Path, Control, ControllerRenderProps, ControllerFieldState, UseFormStateReturn } from "react-hook-form";
+import { Controller, Control, FieldValues, Path } from "react-hook-form";
+
+import {
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface FormFieldProps<T extends FieldValues> {
     control: Control<T>;
     name: Path<T>;
-    render: (props: {
-        field: ControllerRenderProps<T, Path<T>>;
-        fieldState: ControllerFieldState;
-        formState: UseFormStateReturn<T>;
-    }) => React.ReactElement;
+    label: string;
+    placeholder?: string;
+    type?: "text" | "email" | "password";
 }
 
 const FormField = <T extends FieldValues>({
                                               control,
                                               name,
-                                              render,
+                                              label,
+                                              placeholder,
+                                              type = "text",
                                           }: FormFieldProps<T>) => {
-    return <Controller name={name} control={control} render={render} />;
+    return (
+        <Controller
+            control={control}
+            name={name}
+            render={({ field }) => (
+                <FormItem>
+                    <FormLabel className="label">{label}</FormLabel>
+                    <FormControl>
+                        <Input
+                            className="input"
+                            type={type}
+                            placeholder={placeholder}
+                            {...field}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+    );
 };
 
 export default FormField;
