@@ -1,7 +1,10 @@
 'use client'
+import {useEffect,useRef} from "react";
+import Vapi from "@vapi-ai/web"
 import React, { useState } from 'react'
 import Image from "next/image"
 import {cn} from "@/lib/utils";
+
 
 enum CallStatus {
     INACTIVE = 'INACTIVE',
@@ -24,9 +27,10 @@ const Agent = ({ userName, userId, type }: AgentProps) => {
         'What is your name?',
         'My name is Aarya, nice to meet you!'
         ];
-    const lastMessage = message[message.length-1];
 
-    const handleCall = () => {
+    const lastMessage = message[message.length-1];
+    const handleCall = async () => {
+
         if (callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED) {
             setCallStatus(CallStatus.CONNECTING);
 
