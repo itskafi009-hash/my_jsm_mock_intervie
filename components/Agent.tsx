@@ -15,8 +15,8 @@ enum CallStatus {
 }
 
 interface AgentProps{
-    userName: string;
-    userId: string;
+    userName?: string;
+    userId?: string;
     type: string;
 }
 interface SavedMessage{
