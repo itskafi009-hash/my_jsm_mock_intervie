@@ -5,6 +5,7 @@ import {db, auth} from "@/firebase/admin";
 import {cookies} from "next/headers";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
+import {doc} from "@firebase/firestore";
 
 const ONE_WEEK= 60 * 60 * 24 * 7;
 
@@ -122,4 +123,67 @@ export async function isAuthenticated() {
 
     return !!user;
 
+}
+
+/*export async function getInterviewsByUserId(userId: string): Promise<Interview[]  | null> {
+    const interviews = await db.collection('interviews').where('userId', '==', userId).orderBy('createdAt', 'desc').get();
+    return interviews.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+    }))as Interview[];
+}
+
+export async function getLatestInterviews(params: GetLatestInterviewsParams): Promise<Interview[]  | null> {
+    const {userId, limit = 20 } = params;
+
+
+   const interviews = await db
+        .collection('interviews')
+        .orderBy('createdAt', 'desc')
+        .where('finalized', '==', true )
+        .where('userId', '!=', userId)
+        .limit(limit)
+        .get();
+    return interviews.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+    }))as Interview[];
+}*/
+export async function getInterviewsByUserId(userId: string): Promise<Interview[] | null> {
+    try {
+        const interviews = await db
+            .collection('interviews')
+            .where('userId', '==', userId)
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        if (interviews.empty) {
+            console.log("No interviews found for user:", userId);
+            return [];
+        }
+
+        return interviews.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Interview[];
+    } catch (error: any) {
+        console.error("Error fetching interviews by userId:", error.message);
+        return null;
+    }
+}
+
+export async function getLatestInterviews(params: GetLatestInterviewsParams): Promise<Interview[] | null> {
+    const { userId, limit = 20 } = params;
+
+    try {
+        const interviews = await db
+            .collection('interviews')
+            .where('finalized', '==', true)
+            .where('userId', 'not-in', [userId])
+            .orderBy('createdAt', 'desc')
+            .limit(limit)
+            .get();
+
+        return interviews.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Interview[];
+    } catch (error: any) {
+        console.error("Error fetching latest interviews:", error.message);
+        return null;
+    }
 }

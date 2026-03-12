@@ -2,6 +2,10 @@ import React from 'react'
 import {cn, getTechLogos} from "@/lib/utils";
 import Image from "next/image";
 
+type TechIconsProps = {
+    techStack: string[];
+};
+
 const DisplayTechIcons = async ({techStack }: TechIconProps) => {
     const techIcons = await getTechLogos(techStack);
     return (
@@ -13,4 +17,5 @@ const DisplayTechIcons = async ({techStack }: TechIconProps) => {
         ))}</div>
     )
 }
-export default DisplayTechIcons
+export default DisplayTechIcons//
+

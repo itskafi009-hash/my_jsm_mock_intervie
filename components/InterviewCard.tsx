@@ -8,7 +8,7 @@ import DisplayTechIcons from "@/components/DisplayTechIcons";
 const InterviewCard = ({ interviewId, userId, role, type, techstack, createdAt}:InterviewCardProps) => {
     const feedback = null as Feedback | null;
     const normalizedType = /mix/gi.test(type) ? 'Mixed' : type;
-    const formattedDate = dayjs(feedback ?. createdAt || createdAt ||Date.now()).format('MMM D,YYYY');
+    const formattedDate = dayjs(feedback ?.createdAt || createdAt).format('MMM D,YYYY');
     return (
         <div className="card-border w-[360px] max-sm:w-full min-h-96">
             <div className="card-interview">
@@ -32,12 +32,12 @@ const InterviewCard = ({ interviewId, userId, role, type, techstack, createdAt}:
                         </div>
                     </div>
                     <p className="line-clamp-2 mt-5">
-                    {feedback?. finalAssessment ||"You have not taken the interview yet. Take it now to improve your skills."}</p>
+                    {feedback?.finalAssessment ||"You have not taken the interview yet. Take it now to improve your skills."}</p>
                 </div>
                 <div className="flex flex-row justify-between">
-                    <DisplayTechIcons techStack={techstack} />
+                    <DisplayTechIcons techStack={techstack || []} />
                     <Button className="btn-primary">
-                        <Link href={feedback?'/interview/${interviewId}/feedback':'/interview/${interviewId}'}>
+                        <Link href={feedback?`/interview/${interviewId}/feedback`: `/interview/${interviewId}`}>
                             {feedback ?'Check Feedback' : 'View Interview'}
                         </Link>
                     </Button>
