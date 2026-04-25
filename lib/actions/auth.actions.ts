@@ -6,6 +6,7 @@ import {cookies} from "next/headers";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {doc} from "@firebase/firestore";
+import {redirect} from "next/navigation";
 
 const ONE_WEEK= 60 * 60 * 24 * 7;
 
@@ -122,6 +123,15 @@ export async function isAuthenticated() {
     const user = await getCurrentUser();
 
     return !!user;
+
+}
+
+export async function logoutUser() {
+
+        const cookieStore = await cookies();
+        cookieStore.delete("session");
+        redirect("sign-in");
+
 
 }
 

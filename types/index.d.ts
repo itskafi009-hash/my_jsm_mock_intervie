@@ -30,6 +30,7 @@ interface CreateFeedbackParams {
   userId: string;
   transcript: { role: string; content: string }[];
   feedbackId?: string;
+  role?: string;
 }
 
 interface User {

@@ -17,7 +17,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
-import { signIn, signUp } from "@/lib/action/auth.action";
+import { signIn, signUp } from "@/lib/actions/auth.actions";
 import FormField from "./FormField";
 
 const authFormSchema = (type: FormType) => {

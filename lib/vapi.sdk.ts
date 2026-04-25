@@ -1,5 +1,13 @@
-import Vapi from '@vapi-ai/web';
+import Vapi from "@vapi-ai/web";
 
-export const vapi = new Vapi(
-    process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN!
-);
+let vapiInstance: Vapi | null = null;
+
+export function getVapiInstance() {
+    if (vapiInstance) return vapiInstance;
+
+    const publicKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!;
+
+    vapiInstance = new Vapi(publicKey);
+
+    return vapiInstance;
+}

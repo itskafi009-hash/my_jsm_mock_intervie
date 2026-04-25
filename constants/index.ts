@@ -155,7 +155,7 @@ End the conversation on a polite and positive note.
   },
 };
 
-export const feedbackSchema = z.object({
+/*export const feedbackSchema = z.object({
   totalScore: z.number(),
   categoryScores: z.tuple([
     z.object({
@@ -186,6 +186,36 @@ export const feedbackSchema = z.object({
   ]),
   strengths: z.array(z.string()),
   areasForImprovement: z.array(z.string()),
+  finalAssessment: z.string(),
+});*/
+export const feedbackSchema = z.object({
+  totalScore: z.number(),
+
+  categoryScores: z.object({
+    communicationSkills: z.object({
+      score: z.number(),
+      comment: z.string(),
+    }),
+    technicalKnowledge: z.object({
+      score: z.number(),
+      comment: z.string(),
+    }),
+    problemSolving: z.object({
+      score: z.number(),
+      comment: z.string(),
+    }),
+    culturalFit: z.object({
+      score: z.number(),
+      comment: z.string(),
+    }),
+    confidenceAndClarity: z.object({
+      score: z.number(),
+      comment: z.string(),
+    }),
+  }),
+
+  strengths: z.string(),
+  areasForImprovement: z.string(),
   finalAssessment: z.string(),
 });
 

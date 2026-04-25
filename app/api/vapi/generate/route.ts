@@ -1,48 +1,101 @@
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
-import {getRandomInterviewCover} from "@/lib/utils";
-import {db} from "@/firebase/admin";
-import{firestore} from "firebase-admin"
+import { getRandomInterviewCover } from "@/lib/utils";
+import { db } from "@/firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function GET() {
     return Response.json({ success: true, data: "Thank You!" }, { status: 200 });
 }
 
 export async function POST(request: Request) {
-    const{type, role,level,techstack, amount, userid } = await request.json();
+    console.log("POST API HIT");
+
+    const { type, role, level, techstack, amount, userId } = await request.json();
+
     try {
-    const {text: questions} = await generateText({
-        model: google('gemini-3-flash-preview'),
-        prompt: `Prepare question for a job interview.
-      The job role is ${role}.
-      The job experience level is ${level}.
-      The tech stack used in the job is: ${techstack}.
-    The focus between behavioural and technical questions should lean towards: ${type}.
-    The amoount of questions required is: ${amount}.
-    Please return only the questions, without any additional text.
-    The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special character that might break the voice.
-    Return the questions formated like this:
-    ["Question 1", "Question 2", "Question 3"]
+        const result = await generateText({
+            model: google("gemini-3-flash-preview"), // ✅ fixed model
+            /*prompt: `Prepare question for a job interview.
+Role: ${role}
+Level: ${level}
+Tech stack: ${techstack}
+Type: ${type}
+Number: ${amount}
 
-    Thank you! <3
-    `,
+Return ONLY JSON:
+["Question 1", "Question 2"]`*/
+            prompt: `Generate exactly ${amount} interview questions.
 
-    });
-    const interview ={
-        role, type, level, techstack: techstack.split(' '),
-        questions: JSON.parse(questions),
-        userId: userid,
-        finalized: true,
-        coverImage: getRandomInterviewCover(),
-        createdAt: firestore.FieldValue.serverTimestamp(), //
-        // Firestore timestamp};
-    }
-    await db.collection("interviews").add(interview);
+Role: ${role}
+Level: ${level}
+Tech stack: ${techstack}
+Type: ${type}
 
-     return Response.json({ success: true}, { status: 200 })
-    } catch(error) {
-    console.error(error);
+STRICT RULES:
+- Return ONLY JSON array
+- No explanation
+- No markdown
+- No extra text
 
-    return Response.json({ success: false, error }, { status: 500 });
+Example:
+["Q1", "Q2", "Q3"]`
+        });
+
+        const questions = result.text;
+
+        // ✅ CORRECT PLACE
+        console.log("Gemini raw output:", questions);
+
+        // ✅ SAFE PARSE
+        /*let parsedQuestions = [];
+
+        try {
+            parsedQuestions = JSON.parse(questions);
+        } catch (e) {
+            console.log("JSON parse failed:", questions);
+        }*/
+
+        let parsedQuestions: string[] = []; // ✅ ADD THIS
+
+        let cleaned = questions.replace(/```json|```/g, "").trim();
+
+        try {
+            parsedQuestions = JSON.parse(cleaned);
+        } catch (e) {
+            console.log("JSON parse failed:", cleaned);
+        }
+
+        const interview = {
+            role,
+            type,
+            level,
+            techstack: techstack.split(","), // ✅ fixed
+            questions: parsedQuestions,
+            userId,
+            finalized: true,
+            coverImage: getRandomInterviewCover(role),
+            createdAt: FieldValue.serverTimestamp(),
+        };
+
+        const docRef = await db.collection("interviews").add(interview);
+
+        return Response.json({
+            success: true,
+            interviewId: docRef.id
+        });
+
+    } /*catch (error) {
+        console.error(error);
+
+        return Response.json({ success: false, error }, { status: 500 });
+    }*/
+    catch (error: any) {
+        console.error("FULL ERROR:", error);
+
+        return Response.json({
+            success: false,
+            error: error?.message || JSON.stringify(error, null, 2)
+        }, { status: 500 });
     }
 }
